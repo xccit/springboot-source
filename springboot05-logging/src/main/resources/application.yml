@@ -1,0 +1,14 @@
+#logging:
+#  level:
+#    # 包名
+#    io.xccit: trace
+#  file:
+#    path: /spring/log
+#  path: spring/log
+#  file:
+#    name: D:\\springboot.log
+#    name: springboot.log
+#激活为开发环境
+spring:
+  profiles:
+    active: dev

@@ -1,0 +1,16 @@
+
+#spring:
+#  mvc:
+#    static-path-pattern: classpath:/xccit,classpath:/staticPath
+# 配置国际化文件基础名
+spring:
+  messages:
+    # i18n包下的index开头的配置文件
+    basename: i18n.index
+  # 禁用模板引擎缓存(开发模式必须禁用,不然容易导致页面内容不更新)
+  thymeleaf:
+    cache: false
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8

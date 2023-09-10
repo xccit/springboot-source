@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ status：指定log4j2框架本身打印日志的级别
+ monitorInterval：每隔多少秒重新读取配置文件，可以不重启应用的情况下修改配置
+ -->
+<Configuration status="INFO" monitorInterval="30">
+    <Properties>
+        <!-- 配置日志文件输出目录 -->
+        <Property name="APP_NAME">spring-log4j2</Property>
+        <Property name="LOG_HOME">D:\\log</Property>
+        <!--
+         %date 或 %d{yyyy-MM-dd HH:mm:ss.SSS}：表示输出到毫秒的时间
+         %t 或 %thread：输出当前线程的名称
+         %X：按MDC输出日志，使用示例：在日志打印前执行MDC.put("httpRequestId", requestId)，打印之后执行MDC.remove("httpRequestId")
+         %-5level：输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补空格
+         %logger{80}：输出logger名称
+         %msg：输出日志内容
+         %n：换行
+         -->
+        <Property name="printPattern">%date [%thread] [%X{httpRequestId}] %-5level %logger{50} - %msg%n</Property>
+        <Property name="outputPattern">%date [%thread] [%X{httpRequestId}] %-5level %logger{80} - %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="ALL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>${printPattern}</pattern>
+                <charset>UTF-8</charset>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="infoLog" fileName="${LOG_HOME}/${APP_NAME}-info.log" filePattern="${LOG_HOME}/$${date:yyyy-MM-dd}/${APP_NAME}-info.%d{yyyy-MM-dd}.%i.log.zip" immediateFlush="true">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>${outputPattern}</pattern>
+                <charset>UTF-8</charset>
+            </PatternLayout>
+            <Policies>
+                <!--
+                interval：根据日期格式中最具体的时间单位来决定应该多久发生一次rollover，默认是1小时，此处表示1天生成一个文件
+                modulate：表示是否调整时间间隔以使在时间间隔边界发生下一个rollover。
+                例如：假设小时为具体的时间单元，当前时间为上午3点，时间间隔为4，第一次发送rollover是在上午4点，接下来是上午8点，接着是中午，接着是下午4点等发生。
+                -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <!-- 一个日志文件的最大大小，当超过此大小时将发生rollover -->
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <!--文件夹下最多的文件个数,如果不设置默认为7 -->
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+
+        <RollingFile name="errorLog" fileName="${LOG_HOME}/${APP_NAME}-error.log" filePattern="${LOG_HOME}/${APP_NAME}-error.%d{yyyy-MM-dd}.%i.log.zip" immediateFlush="true">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>${outputPattern}</pattern>
+                <charset>UTF-8</charset>
+            </PatternLayout>
+            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="100MB"/>
+                <DefaultRolloverStrategy max="30" />
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <Root level="INFO" >
+            <appender-ref ref="console"/>
+            <appender-ref ref="infoLog"/>
+            <appender-ref ref="errorLog"/>
+        </Root>
+    </Loggers>
+</Configuration>

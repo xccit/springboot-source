@@ -1,0 +1,20 @@
+server:
+  port: 8081
+#user:
+#  name: xccit
+#  age: 21
+#  sex: 男
+#  birthday: 2001/12/11
+#  lists:
+#    - apple
+#    - orange
+#    - banana
+#  maps:
+#    k1: v1
+#    k2: v2
+#  dog:
+#    name: dog
+#    age: 3
+spring:
+  profiles:
+    active: dev
