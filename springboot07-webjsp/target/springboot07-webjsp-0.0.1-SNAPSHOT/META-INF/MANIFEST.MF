@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: xccit-dev
+Build-Jdk: 1.8.0_291
+Implementation-Title: springboot07-webjsp
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: io.xccit
+Main-Class: ${start-class}
+
